@@ -1,65 +1,278 @@
 <!DOCTYPE html>
-<html lang="de">
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>BrainX9</title>
-  <meta name="description" content="Willkommen auf der Seite von BrainX9.">
-  <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Contracts Manager – self-hosted contract tracking</title>
+<meta name="description" content="Keep track of every contract, subscription and insurance policy in your household – self-hosted, private and shareable.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Contracts Manager">
+<meta property="og:description" content="Keep track of every contract, subscription and insurance policy in your household – self-hosted, private and shareable.">
+<meta property="og:image" content="https://raw.githubusercontent.com/BrainX9/contracts-manager/main/docs/screenshots/dashboard.png">
+<link rel="icon" type="image/svg+xml" href="https://raw.githubusercontent.com/BrainX9/contracts-manager/main/docs/logo.svg">
+<style>
+:root{--bg:#fff;--bg2:#f4f5f9;--text:#1c1f2a;--muted:#5a6173;--line:#e2e4ec;--brand:#4f46e5;--brand-text:#fff;--link:#4338ca}
+@media (prefers-color-scheme:dark){:root{--bg:#111218;--bg2:#1a1c25;--text:#e8e9f0;--muted:#a0a6b8;--line:#2a2d3a;--brand:#6366f1;--link:#a5b4fc}}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--text);line-height:1.65}
+a{color:var(--link)}
+img{max-width:100%;height:auto}
+.wrap{max-width:1040px;margin:0 auto;padding:0 16px}
+section{padding:3.5rem 0}
+section.alt{background:var(--bg2)}
+h1,h2,h3{line-height:1.25}
+h2{font-size:1.75rem;margin:0 0 1.5rem}
+h3{font-size:1.1rem;margin:0 0 .5rem}
+.lead{color:var(--muted);font-size:1.15rem;max-width:42rem}
+nav{border-bottom:1px solid var(--line)}
+nav .wrap{display:flex;align-items:center;gap:1rem;padding-top:.75rem;padding-bottom:.75rem;flex-wrap:wrap}
+nav .brand{display:flex;align-items:center;gap:.6rem;font-weight:700;text-decoration:none;color:var(--text)}
+nav .brand img{width:32px;height:32px}
+nav .links{margin-left:auto;display:flex;gap:1rem;flex-wrap:wrap;font-size:.95rem}
+nav .links a{text-decoration:none;color:var(--muted)}
+.hero{padding:4rem 0 2rem;text-align:center}
+.hero h1{font-size:clamp(2rem,6vw,3.2rem);margin:0 0 1rem}
+.hero .lead{margin:0 auto 2rem}
+.btns{display:flex;gap:.75rem;justify-content:center;flex-wrap:wrap}
+.btn{display:inline-block;padding:.7rem 1.5rem;border-radius:999px;font-weight:600;text-decoration:none;border:2px solid var(--brand);color:var(--link)}
+.btn.primary{background:var(--brand);color:var(--brand-text)}
+.shot{border-radius:12px;box-shadow:0 8px 30px rgba(0,0,0,.18);border:1px solid var(--line);cursor:zoom-in;display:block;width:100%}
+.hero .shot{margin-top:3rem}
+.grid{display:grid;gap:1rem;grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}
+.card{background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:1.25rem}
+section.alt .card{background:var(--bg)}
+.card p,.card li{color:var(--muted);margin:.25rem 0}
+.card ul{padding-left:1.1rem;margin:.25rem 0 0}
+.icon{width:28px;height:28px;stroke:var(--brand);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;margin-bottom:.5rem}
+figure{margin:0}
+figcaption{font-size:.9rem;color:var(--muted);margin-top:.5rem}
+.gallery{display:grid;gap:1.5rem;grid-template-columns:repeat(auto-fit,minmax(300px,1fr))}
+.gallery .mobile{max-width:260px}
+.steps{counter-reset:s;list-style:none;padding:0;display:grid;gap:1rem}
+.steps li{counter-increment:s;padding-left:3rem;position:relative}
+.steps li::before{content:counter(s);position:absolute;left:0;top:0;width:2.1rem;height:2.1rem;border-radius:50%;background:var(--brand);color:var(--brand-text);display:grid;place-items:center;font-weight:700}
+code{background:var(--bg2);border:1px solid var(--line);border-radius:6px;padding:.1rem .35rem;font-size:.92em;word-break:break-word}
+.tag{display:inline-block;font-size:.8rem;border:1px solid var(--line);border-radius:999px;padding:.1rem .6rem;color:var(--muted)}
+.roadmap li{margin:.4rem 0}
+footer{border-top:1px solid var(--line);padding:2rem 0;color:var(--muted);font-size:.95rem}
+footer .wrap{display:flex;flex-wrap:wrap;gap:1rem;justify-content:space-between}
+footer nav{border:0}
+.flinks{display:flex;gap:1rem;flex-wrap:wrap}
+dialog{border:0;padding:0;background:transparent;max-width:96vw;max-height:96vh}
+dialog::backdrop{background:rgba(0,0,0,.8)}
+dialog img{max-height:94vh;border-radius:8px;display:block}
+</style>
 </head>
 <body>
-  <header class="hero">
-    <h1>BrainX9</h1>
-    <p>Willkommen auf meiner GitHub Page.</p>
-    <a class="btn" href="#about">Mehr erfahren</a>
-  </header>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-chart" viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="M7 15l4-5 3 3 5-7"/></symbol>
+  <symbol id="i-history" viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/><path d="M12 7v5l3 2"/></symbol>
+  <symbol id="i-bell" viewBox="0 0 24 24"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10 21a2 2 0 0 0 4 0"/></symbol>
+  <symbol id="i-share" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/><path d="M16 5a3 3 0 0 1 0 6M18 14c2 .6 3 2.6 3 6"/></symbol>
+  <symbol id="i-server" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="6" rx="1"/><rect x="3" y="14" width="18" height="6" rx="1"/><path d="M7 7h.01M7 17h.01"/></symbol>
+</svg>
 
-  <main>
-    <section id="about">
-      <h2>Über mich</h2>
-      <p>Hier kannst du etwas über dich, deine Projekte und Interessen schreiben.</p>
-    </section>
+<nav>
+  <div class="wrap">
+    <a class="brand" href="#top"><img src="https://raw.githubusercontent.com/BrainX9/contracts-manager/main/docs/logo.svg" alt="" width="32" height="32">Contracts Manager</a>
+    <div class="links">
+      <a href="#features">Features</a>
+      <a href="#screenshots">Screenshots</a>
+      <a href="#get-started">Get started</a>
+      <a href="#docs">Docs</a>
+      <a href="#more">More projects</a>
+    </div>
+  </div>
+</nav>
 
-    <section id="featured">
-      <h2>Hauptprojekt: Contracts-Manager</h2>
-      <div class="featured">
-        <p>
-          Der <strong>Contracts-Manager</strong> ist meine Anwendung zur zentralen
-          Verwaltung von Verträgen. Verträge, Laufzeiten und Kündigungsfristen
-          lassen sich an einem Ort erfassen, durchsuchen und im Blick behalten,
-          damit keine Frist mehr verpasst wird.
-        </p>
-        <ul>
-          <li>Verträge übersichtlich erfassen und verwalten</li>
-          <li>Laufzeiten und Kündigungsfristen im Blick behalten</li>
-          <li>Schnelle Suche und Filter über alle Verträge</li>
-        </ul>
-        <a class="btn btn-accent" href="https://github.com/BrainX9">Zum Projekt auf GitHub</a>
-      </div>
-    </section>
+<header class="hero" id="top">
+  <div class="wrap">
+    <h1>Contracts Manager</h1>
+    <p class="lead">Keep track of every contract, subscription and insurance policy in your household – self-hosted, private and shareable.</p>
+    <div class="btns">
+      <a class="btn primary" href="#get-started">Get started</a>
+      <a class="btn" href="https://github.com/BrainX9/contracts-manager">View on GitHub</a>
+    </div>
+    <picture>
+      <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/BrainX9/contracts-manager/main/docs/screenshots/dashboard-dark.png">
+      <img class="shot" data-zoom src="https://raw.githubusercontent.com/BrainX9/contracts-manager/main/docs/screenshots/dashboard.png" alt="Contracts Manager overview with monthly and yearly totals, costs by category and the most expensive contracts" width="1280" height="800">
+    </picture>
+  </div>
+</header>
 
-    <section id="projects">
-      <h2>Weitere Projekte</h2>
-      <div class="cards">
-        <article class="card">
-          <h3>Redkeep</h3>
-          <p>Kurzbeschreibung von Redkeep.</p>
-        </article>
-        <article class="card">
-          <h3>Weiteres Projekt</h3>
-          <p>Hier folgt bald mehr.</p>
-        </article>
-      </div>
-    </section>
+<section id="why">
+  <div class="wrap">
+    <h2>Why Contracts Manager</h2>
+    <p class="lead" style="margin-top:-.5rem;margin-bottom:2rem">Electricity, internet, mobile, insurance, streaming, the gym – most households have a dozen or more running contracts, each with its own price, payment interval, notice period and paperwork. Contracts Manager brings them together in one place.</p>
+    <div class="grid">
+      <div class="card"><svg class="icon"><use href="#i-chart"/></svg><h3>Know what you pay</h3><p>See at a glance what you pay per month and per year, and where the money goes.</p></div>
+      <div class="card"><svg class="icon"><use href="#i-history"/></svg><h3>Price history</h3><p>Record price changes over time – the current amount and the history behind it.</p></div>
+      <div class="card"><svg class="icon"><use href="#i-bell"/></svg><h3>Email reminders</h3><p>Get an email reminder before a notice period ends or a contract should be reviewed.</p></div>
+      <div class="card"><svg class="icon"><use href="#i-share"/></svg><h3>Share with your household</h3><p>Share contracts with family members or housemates – read-only or with edit rights.</p></div>
+      <div class="card"><svg class="icon"><use href="#i-server"/></svg><h3>Your hardware, your data</h3><p>Built and tested for a Synology NAS with Docker, with your data on an encrypted volume. English and German interface, light and dark mode, works on the phone.</p></div>
+    </div>
+  </div>
+</section>
 
-    <section id="contact">
-      <h2>Kontakt</h2>
-      <p>Finde mich auf <a href="https://github.com/BrainX9">GitHub</a>.</p>
-    </section>
-  </main>
+<section id="features" class="alt">
+  <div class="wrap">
+    <h2>Features</h2>
+    <div class="grid">
+      <div class="card"><h3>Contracts and costs</h3><ul>
+        <li>Partner, category, consumer, payment method, start date, term, contract number, Markdown notes</li>
+        <li>Status as a traffic light: active, notice sent, cancelled, archived, plus the date a cancellation takes effect</li>
+        <li>Predecessor and successor contracts</li>
+        <li>Automatic reference numbers per year (e.g. <code>20260001</code>)</li>
+        <li>Cost history with weekly, monthly, quarterly or yearly interval; totals per month and year</li>
+        <li>Documents: uploads (PDF, images, Office, up to 20 MB) or Paperless-ngx documents</li>
+        <li>Live search, filters and sorting; totals follow the filter</li></ul></div>
+      <div class="card"><h3>Master data</h3><ul>
+        <li>Contract partners with address, contact and logo</li>
+        <li>Categories as a two-level tree (e.g. Insurance › Car insurance)</li>
+        <li>Consumers: a person, a car, the household</li>
+        <li>Payment methods with icons</li></ul></div>
+      <div class="card"><h3>Sharing and roles</h3><ul>
+        <li>Every object has an owner; share with readers or editors (users or groups)</li>
+        <li>Built-in group to share with everyone</li>
+        <li>User and group management in the web interface, invitations by email, an administrator role</li></ul></div>
+      <div class="card"><h3>Reminders and email</h3><ul>
+        <li>One reminder per contract: date, days in advance, reason, recipients</li>
+        <li>Daily emails from the lead date to the reminder date, then switched off automatically</li>
+        <li>Password reset and invitations by email (any SMTP server)</li></ul></div>
+      <div class="card"><h3>Integrations</h3><ul>
+        <li>Paperless-ngx via its API: documents open inside Contracts Manager, uploads can be transferred with tags and correspondent</li>
+        <li>Single sign-on with the Synology SSO Server (OpenID Connect); local login stays available</li>
+        <li>Backup and import of all data and files as one ZIP file (without passwords)</li></ul></div>
+      <div class="card"><h3>AI assistant <span class="tag">optional, off by default</span></h3><ul>
+        <li>Ask questions about your contracts in a chat</li>
+        <li>Upload a contract or invoice and review the proposed contract</li>
+        <li>Spots probable duplicates in master data</li>
+        <li>See below for details</li></ul></div>
+    </div>
+  </div>
+</section>
 
-  <footer>
-    <p>&copy; 2026 BrainX9</p>
-  </footer>
+<section id="screenshots">
+  <div class="wrap">
+    <h2>Screenshots</h2>
+    <p class="lead" style="margin-top:-.5rem;margin-bottom:2rem">All screenshots show made-up demo data. They come from an earlier version, so newer features are not shown. Click an image to enlarge it.</p>
+    <div class="gallery">
+      <figure><img class="shot" data-zoom loading="lazy" src="https://raw.githubusercontent.com/BrainX9/contracts-manager/main/docs/screenshots/dashboard-dark.png" alt="Overview in dark mode"><figcaption>Dark mode</figcaption></figure>
+      <figure><img class="shot" data-zoom loading="lazy" src="https://raw.githubusercontent.com/BrainX9/contracts-manager/main/docs/screenshots/contracts.png" alt="Contract list with search, filters and totals"><figcaption>Contracts with live search, filters and totals</figcaption></figure>
+      <figure><img class="shot" data-zoom loading="lazy" src="https://raw.githubusercontent.com/BrainX9/contracts-manager/main/docs/screenshots/contract-detail.png" alt="Contract page with cost history and reminder"><figcaption>Contract page with cost history and reminder</figcaption></figure>
+      <figure><img class="shot" data-zoom loading="lazy" src="https://raw.githubusercontent.com/BrainX9/contracts-manager/main/docs/screenshots/reminder.png" alt="Email reminder before a notice period ends"><figcaption>Email reminder before a notice period ends</figcaption></figure>
+      <figure><img class="shot" data-zoom loading="lazy" src="https://raw.githubusercontent.com/BrainX9/contracts-manager/main/docs/screenshots/providers.png" alt="List of contract partners with logos"><figcaption>Contract partners with logos</figcaption></figure>
+      <figure><img class="shot" data-zoom loading="lazy" src="https://raw.githubusercontent.com/BrainX9/contracts-manager/main/docs/screenshots/admin-groups.png" alt="Administration of users and groups"><figcaption>Administration of users and groups</figcaption></figure>
+      <figure class="mobile"><img class="shot" data-zoom loading="lazy" src="https://raw.githubusercontent.com/BrainX9/contracts-manager/main/docs/screenshots/mobile.png" alt="Contracts Manager on a phone"><figcaption>Works on the phone, too</figcaption></figure>
+    </div>
+  </div>
+</section>
+
+<section id="ai" class="alt">
+  <div class="wrap">
+    <h2>AI assistant</h2>
+    <p class="lead" style="margin-top:-.5rem">Optional and off by default.</p>
+    <div class="grid" style="margin-top:1.5rem">
+      <div class="card"><h3>You stay in control</h3><p>Upload a contract or invoice; the assistant reads it and proposes the new contract. Nothing is saved until you approve it. The assistant can never delete anything.</p></div>
+      <div class="card"><h3>Choose your provider</h3><p>Claude (Anthropic), Mistral AI, OpenAI, OpenAI-compatible providers, or Ollama with local models – nothing leaves the house.</p></div>
+      <div class="card"><h3>Scans and photos</h3><p>Local text recognition (Tesseract) or an optional document AI (e.g. Mistral OCR).</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="private">
+  <div class="wrap">
+    <h2>Self-hosted &amp; private</h2>
+    <div class="grid">
+      <div class="card"><h3>Runs at home</h3><p>Synology, Docker Compose, your own hardware. The app runs as a non-root user.</p></div>
+      <div class="card"><h3>No CDN, no tracking</h3><p>All assets are served locally.</p></div>
+      <div class="card"><h3>Careful with secrets</h3><p>Credentials are never shown again and never written to a backup. Login lockout after repeated failed attempts.</p></div>
+      <div class="card"><h3>One-file backup</h3><p>Back up and import all data and files as a single ZIP file. After every update, each user sees a short “What's new” window once.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="get-started" class="alt">
+  <div class="wrap">
+    <h2>Get started</h2>
+    <ol class="steps">
+      <li>Create a folder with the subfolders <code>db</code> and <code>media</code> (e.g. <code>/volume1/docker/contracts-manager</code> on a Synology).</li>
+      <li>Download <a href="https://github.com/BrainX9/contracts-manager/blob/main/docker-compose.yml"><code>docker-compose.yml</code></a> into it and replace <code>CHANGE_ME</code> with a database password.</li>
+      <li>Start it – in the Synology Container Manager (Project › Create) or with <code>docker compose up -d</code>.</li>
+      <li>Open <code>http://&lt;your-nas&gt;:8010</code> and create the first administrator in the browser.</li>
+    </ol>
+    <p>No <code>.env</code> file and no <code>SECRET_KEY</code> needed. Email, single sign-on, the AI assistant and Paperless are set up later in the app.</p>
+    <p>Docker image: <code>brainx9/contracts-manager</code> (<a href="https://hub.docker.com/r/brainx9/contracts-manager">Docker Hub</a>), also <code>ghcr.io/brainx9/contracts-manager</code>; <code>linux/amd64</code> and <code>linux/arm64</code>.</p>
+    <p><a href="https://github.com/BrainX9/contracts-manager/blob/main/docs/installation-synology.md">Full guide: installation on a Synology NAS</a> · <a href="https://github.com/BrainX9/contracts-manager/blob/main/docs/installation-synology-de.md">Deutsche Anleitung für Synology</a></p>
+  </div>
+</section>
+
+<section id="docs">
+  <div class="wrap">
+    <h2>Documentation</h2>
+    <ul>
+      <li><a href="https://github.com/BrainX9/contracts-manager/blob/main/docs/installation-synology.md">Installation on a Synology NAS</a></li>
+      <li><a href="https://github.com/BrainX9/contracts-manager/blob/main/docs/installation-synology-de.md">Synology-Anleitung (deutsch)</a></li>
+      <li><a href="https://github.com/BrainX9/contracts-manager/blob/main/docs/configuration.md">Configuration</a></li>
+      <li><a href="https://github.com/BrainX9/contracts-manager/blob/main/docs/variables.md">Environment variables</a></li>
+      <li><a href="https://github.com/BrainX9/contracts-manager/blob/main/docs/operations.md">Operations (updates, backup)</a></li>
+      <li><a href="https://github.com/BrainX9/contracts-manager/blob/main/docs/development.md">Development</a></li>
+    </ul>
+  </div>
+</section>
+
+<section id="roadmap" class="alt">
+  <div class="wrap">
+    <h2>Roadmap <span class="tag">Planned, not yet implemented</span></h2>
+    <ul class="roadmap">
+      <li>REST API with OpenAPI docs</li>
+      <li>MCP server</li>
+      <li>Email client (IMAP) for contract-related mail</li>
+      <li>Search across contract documents (RAG with pgvector)</li>
+      <li>AI features such as summaries and detecting notice periods</li>
+    </ul>
+  </div>
+</section>
+
+<section id="claude">
+  <div class="wrap">
+    <h2>Built with Claude</h2>
+    <p class="lead">This project was developed primarily by Claude (Anthropic's AI assistant, via Claude Code), working phase by phase under the direction and review of the maintainer. Requirements, decisions and testing are human; most of the code, tests and documentation were written by Claude. Every version was planned first, then implemented in small, reviewed steps with automated tests (over 600).</p>
+  </div>
+</section>
+
+<section id="more" class="alt">
+  <div class="wrap">
+    <h2>More projects</h2>
+    <div class="grid">
+      <div class="card"><h3>Redkeep</h3><p>Description coming soon.</p></div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <span>MIT License © 2026 BrainX9</span>
+    <div class="flinks">
+      <a href="https://github.com/BrainX9/contracts-manager">GitHub</a>
+      <a href="https://github.com/BrainX9/contracts-manager/releases">Releases</a>
+      <a href="https://hub.docker.com/r/brainx9/contracts-manager">Docker Hub</a>
+      <a href="https://github.com/BrainX9/contracts-manager/issues">Issues</a>
+    </div>
+  </div>
+</footer>
+
+<dialog id="zoom" aria-label="Enlarged screenshot"><img alt=""></dialog>
+<script>
+(function(){
+  var d=document.getElementById('zoom'),i=d.querySelector('img');
+  document.addEventListener('click',function(e){
+    var t=e.target;
+    if(t.matches&&t.matches('img[data-zoom]')){i.src=t.currentSrc||t.src;i.alt=t.alt;d.showModal();}
+    else if(t===d||t===i){d.close();}
+  });
+})();
+</script>
 </body>
 </html>
